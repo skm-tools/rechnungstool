@@ -122,7 +122,8 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 
     .row.row-name,
     .row.row-address-top,
-    .row.row-address-bottom {
+    .row.row-address-bottom,
+    .row.row-tax-invoice {
       flex-direction: row;
       flex-wrap: nowrap;
       gap: 10px;
@@ -130,7 +131,8 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 
     .row.row-name .field,
     .row.row-address-top .field,
-    .row.row-address-bottom .field {
+    .row.row-address-bottom .field,
+    .row.row-tax-invoice .field {
       min-width: 0;
       flex: 1 1 0;
     }
@@ -344,7 +346,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       <input type="hidden" name="Anschrift">
       <datalist id="dl-name"></datalist>
       <datalist id="dl-anschrift"></datalist>
-      <div class="row">
+      <div class="row row-tax-invoice">
         <div class="field">
   <label for="tax_display">Steuernummer</label>
   <div class="fake-field-wrap">
@@ -367,12 +369,6 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   <input type="hidden" name="TaxId" id="tax_hidden">
 </div>
         <div class="field">
-  <label>Rechnungsmonat</label>
-  <input name="Monat" type="month" required>
-</div>
-      </div>
-      <div class="row">
-        <div class="field">
   <label for="invoice_display">Rechnungsnummer</label>
   <div
     id="invoice_display"
@@ -386,6 +382,12 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     autocapitalize="off"
     autocorrect="off"></div>
   <input type="hidden" name="InvoiceId" id="invoice_hidden">
+</div>
+      </div>
+      <div class="row">
+        <div class="field">
+  <label>Rechnungsmonat</label>
+  <input name="Monat" type="month" required>
 </div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
