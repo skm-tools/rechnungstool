@@ -63,14 +63,55 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   #attachment { width: 100% !important; height: auto !important; font-size: 16px !important; }
   .summary { position: relative; top: 0; }
   .sign-row { flex-wrap: wrap; align-items: stretch; }
-  @media (max-width: 740px) {
-    .row { flex-direction: column; gap: 10px; }
-    .row.row-name,
-    .row.row-address-top,
-    .row.row-address-bottom { flex-direction: column; }
-    .row .field { min-width: 100%; }
-    h2 { font-size: 1.25rem; }
+@media (max-width: 740px) {
+  .row { 
+    flex-direction: column; 
+    gap: 10px; 
   }
+
+  /* Diese 3 Zeilen sollen mobil nebeneinander bleiben */
+  .row.row-name,
+  .row.row-address-top,
+  .row.row-address-bottom {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .row .field { 
+    min-width: 100%; 
+  }
+
+  /* In den 3 Sonderzeilen sollen die Felder nebeneinander funktionieren */
+  .row.row-name .field,
+  .row.row-address-top .field,
+  .row.row-address-bottom .field {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
+  /* Straße breiter, Hausnummer schmaler */
+  .row.row-address-top .field-street {
+    flex: 3 1 0;
+  }
+
+  .row.row-address-top .field-house-no {
+    flex: 1 1 0;
+  }
+
+  /* PLZ schmaler, Ort breiter */
+  .row.row-address-bottom .field-postcode {
+    flex: 1 1 0;
+  }
+
+  .row.row-address-bottom .field-city {
+    flex: 2 1 0;
+  }
+
+  h2 { 
+    font-size: 1.25rem; 
+  }
+}
 
   .wait { margin-top: 8px; font-size: 0.95rem; color: #333; display: inline-flex; align-items: center; gap: 6px; }
   .wait .dots { display: inline-flex; gap: 2px; }
