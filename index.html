@@ -205,7 +205,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 <body>
   <div class="container">
     <h2>Rechnungsvorlage Sprach- und Kulturmittlung</h2>
-    <form id="rechnungsformular">
+    <form id="rechnungsformular" autocomplete="on">
   <div id="stepCounter" class="step-counter">Schritt 1</div>
 
   <div class="form-step active" data-step="1">
@@ -248,7 +248,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 
   <div class="form-step" data-step="2">
 <div class="row">
-        <div class="field"><label>Name</label><input name="Name" required list="dl-name" autocomplete="on">
+        <div class="field"><label>Name</label><input name="Name" required list="dl-name" autocomplete="name">
 <datalist id="dl-name"></datalist></div>
         <div class="field">
   <label>
@@ -257,7 +257,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       (Straße, Hausnummer, Postleitzahl, Ort)
     </small>
   </label>
-  <input name="Anschrift" required list="dl-anschrift" autocomplete="on">
+  <input name="Anschrift" required list="dl-anschrift" autocomplete="street-address">>
   <datalist id="dl-anschrift"></datalist>
 </div>
       </div>
@@ -270,7 +270,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 </div>
       </div>
       <div class="row">
-        <div class="field"><label>Rechnungsnummer</label><input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="on">
+        <div class="field"><label>Rechnungsnummer</label><input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="off">
 <datalist id="dl-rechnungsnummer"></datalist></div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
@@ -296,9 +296,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div>Enthaltene Umsatzsteuer (19 %): 0,00 €</div>
       </div>
       <div class="row">
-        <div class="field"><label>Bank</label><input name="Bank" list="dl-bank" autocomplete="on">
+        <div class="field"><label>Bank</label><input name="Bank" list="dl-bank" autocomplete="organization">>
 <datalist id="dl-bank"></datalist></div>
-        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="on">
+        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="off">
 <datalist id="dl-iban"></datalist></div>
        <div class="field">
   <label for="bic">
