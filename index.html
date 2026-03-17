@@ -28,7 +28,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   }
   h2 { text-align: center; margin-bottom: 18px; }
   form { display: flex; flex-direction: column; gap: 12px; }
-  .row { display: flex; gap: 40px; }
+  .row { display: flex; gap: 12px; }
   .row .field { flex: 1; }
   label { font-weight: 500; margin-bottom: 4px; display:block; }
 
@@ -43,71 +43,45 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   .sign-clear { font-size:0.92em; cursor:pointer; color:#0070b8; background:none; border:none; padding: 0; margin-left: 6px;}
 
   /*für die Daratellung auf Smartphones*/
-  :root { --gap: 40px; }
+  :root { --gap: 12px; }
   html, body { height: 100%; }
   body { -webkit-text-size-adjust: 100%; }
   .container { max-width: 720px; margin: clamp(16px, 4vh, 28px) auto; padding: clamp(14px, 4vw, 24px); }
   input, textarea, button, select { font-size: 16px; line-height: 1.4; } /* prevent iOS zoom */
   .row { display: flex; flex-wrap: wrap; gap: var(--gap); }
-  .row .field { min-width: 0; flex: 1 1 220px; }
-  .row.row-name .field { flex: 1 1 0; }
-  .row.row-address-top { flex-wrap: nowrap; }
-  .row.row-address-top .field.street { flex: 2.4 1 0; }
-  .row.row-address-top .field.house-number { flex: 0.8 1 0; }
-  .row.row-address-bottom { flex-wrap: nowrap; }
-  .row.row-address-bottom .field.postal-code { flex: 0.9 1 0; }
-  .row.row-address-bottom .field.city { flex: 1.7 1 0; }
+  .row .field { min-width: min(100%, 320px); }
   label { line-height: 1.2; }
   input[type="radio"] { width: 20px; height: 20px; }
   .pdf-btn { width: 100%; padding: 14px; }
   #attachment { width: 100% !important; height: auto !important; font-size: 16px !important; }
   .summary { position: relative; top: 0; }
   .sign-row { flex-wrap: wrap; align-items: stretch; }
-@media (max-width: 740px) {
-  .row {
-    flex-direction: column;
-    gap: 10px;
-  }
+  @media (max-width: 740px) {
+    .row { flex-direction: column; gap: 10px; }
+    .row .field { min-width: 100%; }
 
-  .row.row-name,
-  .row.row-address-top,
-  .row.row-address-bottom {
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 10px;
-  }
+    .row.row-name,
+    .row.row-address-top,
+    .row.row-address-bottom {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 10px;
+    }
 
-  .row .field {
-    min-width: 100%;
-  }
+    .row.row-name .field,
+    .row.row-address-top .field,
+    .row.row-address-bottom .field {
+      min-width: 0;
+      flex: 1 1 0;
+    }
 
-  .row.row-name .field,
-  .row.row-address-top .field,
-  .row.row-address-bottom .field {
-    min-width: 0;
-    flex: 1 1 0;
-  }
+    .row.row-address-top .field-street { flex: 3 1 0; }
+    .row.row-address-top .field-house-no { flex: 1 1 0; }
+    .row.row-address-bottom .field-postcode { flex: 1 1 0; }
+    .row.row-address-bottom .field-city { flex: 2 1 0; }
 
-  .row.row-address-top .field-street {
-    flex: 3 1 0;
+    h2 { font-size: 1.25rem; }
   }
-
-  .row.row-address-top .field-house-no {
-    flex: 1 1 0;
-  }
-
-  .row.row-address-bottom .field-postcode {
-    flex: 1 1 0;
-  }
-
-  .row.row-address-bottom .field-city {
-    flex: 2 1 0;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
-}
 
   .wait { margin-top: 8px; font-size: 0.95rem; color: #333; display: inline-flex; align-items: center; gap: 6px; }
   .wait .dots { display: inline-flex; gap: 2px; }
@@ -294,65 +268,36 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   </div>
 
   <div class="form-step" data-step="2">
-
-  <div class="row row-name">
-    <div class="field">
-      <label>Vorname</label>
-      <input name="Vorname" required autocomplete="given-name">
-    </div>
-    <div class="field">
-      <label>Nachname</label>
-      <input name="Nachname" required autocomplete="family-name">
-    </div>
-  </div>
-
-  <div class="row row-address-top">
-    <div class="field field-street">
-      <label>Straße</label>
-      <input name="Strasse" required autocomplete="address-line1">
-    </div>
-    <div class="field field-house-no">
-      <label>Hausnummer</label>
-      <input name="Hausnummer" required autocomplete="off">
-    </div>
-  </div>
-
-  <div class="row row-address-bottom">
-    <div class="field field-postcode">
-      <label>PLZ</label>
-      <input name="PLZ" required inputmode="numeric" autocomplete="postal-code">
-    </div>
-    <div class="field field-city">
-      <label>Ort</label>
-      <input name="Ort" required autocomplete="address-level2">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="field">
-      <label>Steuernummer</label>
-      <input name="Steuernummer" required list="dl-steuernummer" autocomplete="off">
-      <datalist id="dl-steuernummer"></datalist>
-    </div>
-    <div class="field">
-      <label>Rechnungsmonat</label>
-      <input name="Monat" type="month" required>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="field">
-      <label>Rechnungsnummer</label>
-      <input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="off">
-      <datalist id="dl-rechnungsnummer"></datalist>
-    </div>
-    <div class="field">
-      <label>Rechnungsdatum</label>
-      <input name="Datum" type="date" required>
-    </div>
-  </div>
-
+<div class="row row-name">
+        <div class="field"><label>Vorname</label><input name="Vorname" required autocomplete="given-name"></div>
+        <div class="field"><label>Nachname</label><input name="Nachname" required autocomplete="family-name"></div>
+      </div>
+      <div class="row row-address-top">
+        <div class="field field-street"><label>Straße</label><input name="Strasse" required autocomplete="address-line1"></div>
+        <div class="field field-house-no"><label>Hausnummer</label><input name="Hausnummer" required autocomplete="off"></div>
+      </div>
+      <div class="row row-address-bottom">
+        <div class="field field-postcode"><label>PLZ</label><input name="PLZ" required inputmode="numeric" autocomplete="postal-code"></div>
+        <div class="field field-city"><label>Ort</label><input name="Ort" required autocomplete="address-level2"></div>
+      </div>
+      <input type="hidden" name="Name">
+      <input type="hidden" name="Anschrift">
+      <datalist id="dl-name"></datalist>
+      <datalist id="dl-anschrift"></datalist>
+      <div class="row">
+        <div class="field"><label>Steuernummer</label><input name="Steuernummer" required list="dl-steuernummer" autocomplete="on">
+<datalist id="dl-steuernummer"></datalist></div>
+        <div class="field">
+  <label>Rechnungsmonat</label>
+  <input name="Monat" type="month" required>
 </div>
+      </div>
+      <div class="row">
+        <div class="field"><label>Rechnungsnummer</label><input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="off">
+<datalist id="dl-rechnungsnummer"></datalist></div>
+        <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
+      </div>
+  </div>
 
   <div class="form-step" data-step="3">
 
@@ -374,15 +319,15 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div>Enthaltene Umsatzsteuer (19 %): 0,00 €</div>
       </div>
       <div class="row">
-        <div class="field"><label>Bank</label><input name="Bank" list="dl-bank" autocomplete="on">
+        <div class="field"><label>Bank</label><input name="Bank" list="dl-bank" autocomplete="organization">
 <datalist id="dl-bank"></datalist></div>
-        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="on">
+        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="off">
 <datalist id="dl-iban"></datalist></div>
        <div class="field">
   <label for="bic">
     BIC <span style="color:#6b7280; font-weight:normal;">(optional)</span>
   </label>
-  <input id="bic" name="BIC (optional)" list="dl-bic" autocomplete="on" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
+  <input id="bic" name="BIC" list="dl-bic" autocomplete="on" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
   <datalist id="dl-bic"></datalist>
 </div>
       </div>
@@ -651,17 +596,12 @@ function formatDateDE(input) {
 
 
 const prettyMonat = (formData.Monat && formData.Monat.includes('-')) ? formatMonth(formData.Monat) : (formData.Monat || "");
-const fullName = ((formData.Vorname || '') + ' ' + (formData.Nachname || '')).trim();
-const anschrift = [
-  [formData.Strasse || '', formData.Hausnummer || ''].join(' ').trim(),
-  [formData.PLZ || '', formData.Ort || ''].join(' ').trim()
-].filter(Boolean).join(', ');
 if (formData.ust === "19") {
   function ohneEuro(zahl) {
     return (zahl || "").replace(/[€\s]/g, "");
   }
-  page.drawText(fullName, { x: 115, y: 760, size: 13 });
-  page.drawText(anschrift || "", { x: 130, y: 732, size: 13 });
+  page.drawText(formData.Name || "", { x: 115, y: 760, size: 13 });
+  page.drawText(formData.Anschrift || "", { x: 130, y: 732, size: 13 });
   page.drawText(formatDateDE(formData.Datum) || "", { x: 370, y: 541, size: 13 });
   page.drawText(formData.Steuernummer || "", { x: 160, y: 705, size: 13 });
   page.drawText(formData.Rechnungsnummer || "", { x: 184, y: 511, size: 13 });
@@ -684,7 +624,7 @@ if (formData.ust === "19") {
   // UNTERSCHRIFT
 
 {
-  const nameForSig = ((formData.Vorname || "") + " " + (formData.Nachname || "")).trim();
+  const nameForSig = (formData.Name || "").trim();
   if (nameForSig) {
     // 1) Weißes Rechteck über den alten „Unterschrift“-Bereich legen
     page.drawRectangle({
@@ -705,8 +645,8 @@ if (formData.ust === "19") {
 function ohneEuro(zahl) {
     return (zahl || "").replace(/[€\s]/g, "");
   }
-  page.drawText(fullName, { x: 115, y: 760, size: 13 });
-  page.drawText(anschrift || "", { x: 130, y: 732, size: 13 });
+  page.drawText(formData.Name || "", { x: 115, y: 760, size: 13 });
+  page.drawText(formData.Anschrift || "", { x: 130, y: 732, size: 13 });
   page.drawText(formatDateDE(formData.Datum) || "", { x: 370, y: 527, size: 13 });
   page.drawText(formData.Steuernummer || "", { x: 160, y: 705, size: 13 });
   page.drawText(formData.Rechnungsnummer || "", { x: 184, y: 498, size: 13 });
@@ -729,7 +669,7 @@ page.drawText("Als Kleinunternehmer im Sinne von § 19 Abs. 1 UStG wird keine Um
 
   // UNTERSCHRIFT
 {
-  const nameForSig = ((formData.Vorname || "") + " " + (formData.Nachname || "")).trim();
+  const nameForSig = (formData.Name || "").trim();
   if (nameForSig) {
     page.drawRectangle({
       x: 60,
@@ -961,7 +901,7 @@ const dateStr =
   formData.Datum ? formatDateDE(formData.Datum) : new Date().toLocaleDateString("de-DE");
 
 // Name aus Formular
-const nameStr = sanitizeForFilename(((formData.Vorname || '') + ' ' + (formData.Nachname || '')).trim());
+const nameStr = sanitizeForFilename(formData.Name);
 
 // Finaler Dateiname
 const fileName = `SKM-Rechnung_${dateStr}_${nameStr || "Unbekannt"}.pdf`;
@@ -999,10 +939,10 @@ setTimeout(() => {
 <script>
 (function() {
   const FORM_ID = 'rechnungsformular';
-  const KEYS = ['Vorname','Nachname','Bank','IBAN','BIC','Steuernummer','Rechnungsnummer','Monat'];
+  const KEYS = ['Name','Anschrift','Bank','IBAN','BIC','Steuernummer','Rechnungsnummer','Monat'];
   const MAP = {
-    'Vorname': 'dl-vorname',
-    'Nachname': 'dl-nachname',
+    'Name': 'dl-name',
+    'Anschrift': 'dl-anschrift',
     'Bank': 'dl-bank',
     'IBAN': 'dl-iban',
     'BIC': 'dl-bic',
@@ -1044,6 +984,56 @@ setTimeout(() => {
 </script>
 
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('rechnungsformular');
+  if (!form) return;
+
+  const fields = ['Vorname','Nachname','Strasse','Hausnummer','PLZ','Ort'];
+
+  function joinNonEmpty(parts, sep) {
+    return parts.map(v => (v || '').trim()).filter(Boolean).join(sep);
+  }
+
+  function syncCombinedFields() {
+    const vorname = form.elements['Vorname']?.value || '';
+    const nachname = form.elements['Nachname']?.value || '';
+    const strasse = form.elements['Strasse']?.value || '';
+    const hausnummer = form.elements['Hausnummer']?.value || '';
+    const plz = form.elements['PLZ']?.value || '';
+    const ort = form.elements['Ort']?.value || '';
+
+    const fullName = joinNonEmpty([vorname, nachname], ' ');
+    const streetLine = joinNonEmpty([strasse, hausnummer], ' ');
+    const cityLine = joinNonEmpty([plz, ort], ' ');
+    const fullAddress = joinNonEmpty([streetLine, cityLine], ', ');
+
+    if (form.elements['Name']) form.elements['Name'].value = fullName;
+    if (form.elements['Anschrift']) form.elements['Anschrift'].value = fullAddress;
+  }
+
+  fields.forEach(function(name) {
+    const el = form.elements[name];
+    if (!el) return;
+    el.addEventListener('input', syncCombinedFields);
+    el.addEventListener('change', syncCombinedFields);
+  });
+
+  const nextBtn = document.querySelector('.wizard-next');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', syncCombinedFields, { capture: true });
+  }
+
+  const pdfBtn = document.getElementById('pdfgen');
+  if (pdfBtn) {
+    pdfBtn.addEventListener('click', syncCombinedFields, { capture: true });
+  }
+
+  form.addEventListener('submit', syncCombinedFields, { capture: true });
+  syncCombinedFields();
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -1112,17 +1102,12 @@ if (/^\d{4}-\d{2}-\d{2}$/.test(datumText)) {
   }
 }
 
-var anschriftText = [
-  [data.Strasse || '', data.Hausnummer || ''].join(' ').trim(),
-  [data.PLZ || '', data.Ort || ''].join(' ').trim()
-].filter(Boolean).join(', ');
-
   box.innerHTML =
     '<div style="padding:8px 10px;">' +
       '<h4 style="margin:0 0 6px 0;">Stammdaten</h4>' +
       '<ul style="list-style:none;padding-left:0;margin:0 0 8px 0;font-size:0.95rem;">' +
-        '<li><strong>Name:</strong> ' + esc(((data.Vorname || '') + ' ' + (data.Nachname || '')).trim()) + '</li>' +
-        '<li><strong>Anschrift:</strong> ' + esc(anschriftText) + '</li>' +
+        '<li><strong>Name:</strong> ' + esc(data.Name) + '</li>' +
+        '<li><strong>Anschrift:</strong> ' + esc(data.Anschrift) + '</li>' +
         '<li><strong>Steuernummer:</strong> ' + esc(data.Steuernummer) + '</li>' +
         '<li><strong>Rechnungsnummer:</strong> ' + esc(data.Rechnungsnummer) + '</li>' +
         '<li><strong>Rechnungsmonat:</strong> ' + esc(monatText) + '</li>' +
@@ -1246,55 +1231,13 @@ if ('serviceWorker' in navigator) {
       registrations.forEach(function (registration) {
         registration.unregister();
       });
+    }).catch(function (err) {
+      console.warn('Service Worker konnte nicht entfernt werden:', err);
     });
   });
 }
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const field = document.getElementById("tax_id");
-  const datalist = document.getElementById("dl-tax-id");
-  const storageKey = "rechnung_tax_id_history";
-  const maxItems = 5;
-
-  function loadValues() {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey) || "[]");
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function saveValues(values) {
-    localStorage.setItem(storageKey, JSON.stringify(values.slice(0, maxItems)));
-  }
-
-  function renderDatalist() {
-    const values = loadValues();
-    datalist.innerHTML = values
-      .map(v => `<option value="${String(v).replace(/"/g, "&quot;")}">`)
-      .join("");
-  }
-
-  function saveCurrentValue() {
-    const value = (field.value || "").trim();
-    if (!value) return;
-
-    let values = loadValues();
-
-    values = values.filter(v => v !== value);
-    values.unshift(value);
-
-    saveValues(values);
-    renderDatalist();
-  }
-
-  renderDatalist();
-
-  field.addEventListener("change", saveCurrentValue);
-  field.addEventListener("blur", saveCurrentValue);
-});
-</script>
 
 </body>
 </html>
+
