@@ -349,19 +349,23 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       <div class="row row-tax-invoice">
         <div class="field">
   <label for="tax_display">Steuernummer</label>
-  <div
-    id="tax_display"
-    class="fake-input"
-    contenteditable="true"
-    role="textbox"
-    aria-label="Steuernummer"
-    data-placeholder="Steuernummer"
-    data-required-label="Steuernummer"
-    spellcheck="false"
-    autocapitalize="off"
-    autocorrect="off"></div>
-  <input type="hidden" name="TaxId" id="tax_hidden">
-</div>
+  <div class="fake-field-wrap">
+    <div
+      id="tax_display"
+      class="fake-input"
+      contenteditable="true"
+      role="textbox"
+      aria-label="Steuernummer"
+      data-placeholder="Steuernummer"
+      data-required-label="Steuernummer"
+      data-target="tax_hidden"
+      data-storage-key="TaxId"
+      data-suggestions-id="tax_suggestions"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"></div>
+    <div id="tax_suggestions" class="fake-suggestions hidden"></div>
+  </div>
   <input type="hidden" name="TaxId" id="tax_hidden">
 </div>
         <div class="field">
@@ -504,24 +508,44 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   </div>
 
   <div style="text-align:center; margin-top: 10px;">
-    <button
-      class="pdf-btn hidden"
-      type="button"
-      id="pdfgen"
-      style="
-        padding: 10px 20px;
-        border-radius: 999px;
-        border: none;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        background: #2563eb;
-        color: #ffffff;
-        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
-      "
-    >
-      Rechnung (PDF) erzeugen &amp; herunterladen
-    </button>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button
+        class="pdf-btn hidden"
+        type="button"
+        id="pdfgen"
+        style="
+          padding: 10px 20px;
+          border-radius: 999px;
+          border: none;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          background: #2563eb;
+          color: #ffffff;
+          box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+        "
+      >
+        Rechnung (PDF) erzeugen &amp; herunterladen
+      </button>
+      <button
+        class="pdf-btn hidden"
+        type="button"
+        id="sharepdf"
+        style="
+          padding: 10px 20px;
+          border-radius: 999px;
+          border: none;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          background: #0f766e;
+          color: #ffffff;
+          box-shadow: 0 4px 10px rgba(15, 118, 110, 0.35);
+        "
+      >
+        Teilen
+      </button>
+    </div>
   </div>
 </div>
 
@@ -612,6 +636,7 @@ const base64_ust = "JVBERi0xLjcKCjQgMCBvYmoKPDwKL0ZpbHRlciAvRmxhdGVEZWNvZGUKL0xl
 function setPdfWaiting(isOn, msg) {
   const waitEl = document.getElementById('pdf-wait');
   const btn = document.getElementById('pdfgen');
+  const shareBtn = document.getElementById('sharepdf');
   const form = document.getElementById('rechnungsformular');
   if (!waitEl || !btn) return;
 
@@ -626,20 +651,47 @@ function setPdfWaiting(isOn, msg) {
     btn.dataset.originalText = btn.innerHTML;
     btn.innerHTML = '<span class="blink-text">Rechnung wird erstellt...</span>';
     btn.disabled = true;
+    if (shareBtn) shareBtn.disabled = true;
   } else {
     btn.innerHTML = btn.dataset.originalText || 'Rechnung (PDF) erzeugen & herunterladen';
     btn.disabled = false;
+    if (shareBtn) shareBtn.disabled = false;
   }
 }
 
 window.addEventListener('DOMContentLoaded', updateBerechnung);
 
+async function sharePdfFile(pdfBytes, fileName) {
+  try {
+    const file = new File([pdfBytes], fileName, { type: 'application/pdf' });
+    if (navigator.canShare && navigator.share) {
+      const shareData = {
+        title: 'Rechnung',
+        text: 'Anbei meine Rechnung.',
+        files: [file]
+      };
+      if (navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+        return true;
+      }
+    }
+  } catch (err) {
+    if (err && err.name === 'AbortError') return true;
+    console.warn('Teilen fehlgeschlagen:', err);
+  }
 
+  const mailto =
+    'mailto:faktura@meg-betreutes-wohnen.de' +
+    '?subject=' + encodeURIComponent('Rechnung') +
+    '&body=' + encodeURIComponent('Guten Tag,%0D%0A%0D%0Aanbei meine Rechnung.%0D%0A%0D%0AViele Grüße');
+  window.location.href = mailto;
+  return false;
+}
 
 
     // ==== PDF GENERIERUNG ====
     
-document.getElementById('pdfgen').onclick = async function() {
+async function buildPdfBundle(waitMsg) {
   if (window.syncSpecialFields) window.syncSpecialFields();
   const dateField = document.querySelector("input[name='Datum']");
   const numberField = document.getElementById('invoice_display');
@@ -670,7 +722,7 @@ document.getElementById('pdfgen').onclick = async function() {
     return;
   }
 
-setPdfWaiting(true, 'Bitte warten');
+setPdfWaiting(true, waitMsg || 'Bitte warten');
 
   try {
       const form = document.getElementById('rechnungsformular');
@@ -1021,31 +1073,44 @@ const fileName = `SKM-Rechnung_${dateStr}_${nameStr || "Unbekannt"}.pdf`;
             
 
 
-// PDF speichern, anzeigen+herunterladen 
+// PDF speichern und zurückgeben
 const pdfBytes = await pdfDoc.save();
-const blob = new Blob([pdfBytes], { type: "application/pdf" });
-const url = URL.createObjectURL(blob);
-
-window.open(url, "_blank");
-setTimeout(() => {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}, 1500);
-setTimeout(() => {
-  URL.revokeObjectURL(url);
-}, 60000);
-
+return { pdfBytes, fileName };
 
 } catch (err) {
     console.error(err);
     alert('Beim Erzeugen der PDF ist ein Fehler aufgetreten.');
+    return null;
   } finally {
     setPdfWaiting(false);
   }
+}
+
+document.getElementById('pdfgen').onclick = async function() {
+  const result = await buildPdfBundle('Bitte warten');
+  if (!result) return;
+  const { pdfBytes, fileName } = result;
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  setTimeout(() => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, 500);
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 60000);
+};
+
+document.getElementById('sharepdf').onclick = async function() {
+  const result = await buildPdfBundle('Bitte warten');
+  if (!result) return;
+  const { pdfBytes, fileName } = result;
+  await sharePdfFile(pdfBytes, fileName);
 };
 </script>
 
@@ -1357,6 +1422,7 @@ var form = document.getElementById('rechnungsformular');
   var prevBtn = document.getElementById('prevStep');
   var nextBtn = document.getElementById('nextStep');
   var pdfBtn  = document.getElementById('pdfgen');
+  var shareBtn = document.getElementById('sharepdf');
   var counter = document.getElementById('stepCounter');
 
   var current = 0;
@@ -1381,9 +1447,11 @@ var form = document.getElementById('rechnungsformular');
     if (index === steps.length - 1) {
       if (nextBtn) nextBtn.classList.add('hidden');
       if (pdfBtn)  pdfBtn.classList.remove('hidden');
+      if (shareBtn) shareBtn.classList.remove('hidden');
     } else {
       if (nextBtn) nextBtn.classList.remove('hidden');
       if (pdfBtn)  pdfBtn.classList.add('hidden');
+      if (shareBtn) shareBtn.classList.add('hidden');
     }
     current = index;
     updateCounter();
@@ -1455,6 +1523,8 @@ var form = document.getElementById('rechnungsformular');
 
 </body>
 </html>
+
+
 
 
 
