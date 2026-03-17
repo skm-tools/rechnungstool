@@ -282,6 +282,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       </div>
       <input type="hidden" name="Name">
       <input type="hidden" name="Anschrift">
+      <input type="hidden" name="Bank" id="bank_hidden">
+      <input type="hidden" name="IBAN" id="iban_hidden">
+      <input type="hidden" name="BIC" id="bic_hidden">
       <datalist id="dl-name"></datalist>
       <datalist id="dl-anschrift"></datalist>
       <div class="row">
@@ -296,9 +299,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     autocorrect="off"
     autocapitalize="off"
     spellcheck="false"
-    readonly
-    onfocus="this.removeAttribute('readonly');"
-    required>
+    required
+    list="dl-steuernummer">
+  <datalist id="dl-steuernummer"></datalist>
 </div>
         <div class="field">
   <label>Rechnungsmonat</label>
@@ -316,9 +319,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     autocorrect="off"
     autocapitalize="off"
     spellcheck="false"
-    readonly
-    onfocus="this.removeAttribute('readonly');"
-    required>
+    required
+    list="dl-rechnungsnummer">
+  <datalist id="dl-rechnungsnummer"></datalist>
 </div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
@@ -344,15 +347,15 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div>Enthaltene Umsatzsteuer (19 %): 0,00 €</div>
       </div>
       <div class="row">
-        <div class="field"><label>Bank</label><input name="Bank" list="dl-bank" autocomplete="organization">
+        <div class="field"><label>Bank</label><input id="bank_input" name="Bank" form="bankdatenform" list="dl-bank" autocomplete="organization">
 <datalist id="dl-bank"></datalist></div>
-        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="off">
+        <div class="field"><label>IBAN</label><input id="iban_input" name="IBAN" form="bankdatenform" list="dl-iban" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 <datalist id="dl-iban"></datalist></div>
        <div class="field">
-  <label for="bic">
+  <label for="bic_input">
     BIC <span style="color:#6b7280; font-weight:normal;">(optional)</span>
   </label>
-  <input id="bic" name="BIC" list="dl-bic" autocomplete="on" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
+  <input id="bic_input" name="BIC" form="bankdatenform" list="dl-bic" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
   <datalist id="dl-bic"></datalist>
 </div>
       </div>
@@ -447,6 +450,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     <button type="button" class="wizard-next" id="nextStep">Weiter</button>
   </div>
 </form>
+  <form id="bankdatenform" autocomplete="off" style="display:none"></form>
   </div>
   <script>
       // ==== Base64-PDFs einfügen ====
@@ -558,9 +562,9 @@ window.addEventListener('DOMContentLoaded', updateBerechnung);
     
 document.getElementById('pdfgen').onclick = async function() {
   const dateField = document.querySelector("input[name='Datum']");
-  const numberField = document.querySelector("input[name='InvoiceId']");
+  const numberField = document.querySelector("input[name='Rechnungsnummer']");
   const monthField = document.querySelector("input[name='Monat']");
-  const taxField = document.querySelector("input[name='TaxId']");
+  const taxField = document.querySelector("input[name='Steuernummer']");
 
   if (!dateField.value) {
     alert("Bitte  Rechnungsdatum angeben!");
@@ -590,6 +594,9 @@ setPdfWaiting(true, 'Bitte warten');
 
   try {
       const form = document.getElementById('rechnungsformular');
+      if (typeof window.syncCombinedFieldsGlobal === 'function') {
+        try { window.syncCombinedFieldsGlobal(); } catch (e) { console.warn('syncCombinedFieldsGlobal Fehler vor PDF:', e); }
+      }
       const formData = Object.fromEntries(new FormData(form));
       // Welche Variante?
       let base64_pdf = (formData.ust === "19") ? base64_ust : base64_klein;
@@ -964,13 +971,15 @@ setTimeout(() => {
 <script>
 (function() {
   const FORM_ID = 'rechnungsformular';
-  const KEYS = ['Name','Anschrift','Bank','IBAN','BIC','Monat'];
+  const KEYS = ['Vorname','Nachname','Bank','IBAN','BIC','TaxId','InvoiceId','Monat'];
   const MAP = {
-    'Name': 'dl-name',
-    'Anschrift': 'dl-anschrift',
+    'Vorname': 'dl-vorname',
+    'Nachname': 'dl-nachname',
     'Bank': 'dl-bank',
     'IBAN': 'dl-iban',
     'BIC': 'dl-bic',
+    'TaxId': 'dl-steuernummer',
+    'InvoiceId': 'dl-rechnungsnummer',
     'Monat': 'dl-monat'
   };
   const MAX = 10;
@@ -995,7 +1004,13 @@ setTimeout(() => {
     Object.entries(MAP).forEach(([key, dlId]) => fillDatalist(dlId, loadList(key)));
 
     const form = document.getElementById(FORM_ID);
-    const saveAll = () => Object.keys(MAP).forEach(k => saveValue(k, (form.elements[k]?.value || '').trim()));
+    const valueForKey = (key) => {
+      if (key === 'Bank') return (document.getElementById('bank_input')?.value || '').trim();
+      if (key === 'IBAN') return (document.getElementById('iban_input')?.value || '').trim();
+      if (key === 'BIC') return (document.getElementById('bic_input')?.value || '').trim();
+      return (form.elements[key]?.value || '').trim();
+    };
+    const saveAll = () => Object.keys(MAP).forEach(k => saveValue(k, valueForKey(k)));
 
     // echter Submit ;-)
     form && form.addEventListener('submit', saveAll);
@@ -1034,10 +1049,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form.elements['Name']) form.elements['Name'].value = fullName;
     if (form.elements['Anschrift']) form.elements['Anschrift'].value = fullAddress;
+    if (form.elements['Bank']) form.elements['Bank'].value = document.getElementById('bank_input')?.value || '';
+    if (form.elements['IBAN']) form.elements['IBAN'].value = document.getElementById('iban_input')?.value || '';
+    if (form.elements['BIC']) form.elements['BIC'].value = document.getElementById('bic_input')?.value || '';
   }
 
   fields.forEach(function(name) {
     const el = form.elements[name];
+    if (!el) return;
+    el.addEventListener('input', syncCombinedFields);
+    el.addEventListener('change', syncCombinedFields);
+  });
+
+  ['bank_input','iban_input','bic_input'].forEach(function(id) {
+    const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('input', syncCombinedFields);
     el.addEventListener('change', syncCombinedFields);
@@ -1054,6 +1079,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   form.addEventListener('submit', syncCombinedFields, { capture: true });
+  window.syncCombinedFieldsGlobal = syncCombinedFields;
   syncCombinedFields();
 });
 </script>
@@ -1068,6 +1094,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // Berechnung sicherstellen (damit Stunden & Summen aktuell sind)
   if (typeof updateBerechnung === 'function') {
     try { updateBerechnung(); } catch (e) { console.warn('updateBerechnung Fehler in buildPreview:', e); }
+  }
+
+  if (typeof window.syncCombinedFieldsGlobal === 'function') {
+    try { window.syncCombinedFieldsGlobal(); } catch (e) { console.warn('syncCombinedFieldsGlobal Fehler in buildPreview:', e); }
   }
 
   var fd = new FormData(form);
@@ -1131,8 +1161,8 @@ if (/^\d{4}-\d{2}-\d{2}$/.test(datumText)) {
       '<ul style="list-style:none;padding-left:0;margin:0 0 8px 0;font-size:0.95rem;">' +
         '<li><strong>Name:</strong> ' + esc(data.Name) + '</li>' +
         '<li><strong>Anschrift:</strong> ' + esc(data.Anschrift) + '</li>' +
-        '<li><strong>Steuernummer:</strong> ' + esc(data.TaxId) + '</li>' +
-        '<li><strong>Rechnungsnummer:</strong> ' + esc(data.InvoiceId) + '</li>' +
+        '<li><strong>Steuernummer:</strong> ' + esc(data.Steuernummer) + '</li>' +
+        '<li><strong>Rechnungsnummer:</strong> ' + esc(data.Rechnungsnummer) + '</li>' +
         '<li><strong>Rechnungsmonat:</strong> ' + esc(monatText) + '</li>' +
         '<li><strong>Rechnungsdatum:</strong> ' + esc(datumText) + '</li>' +
         '<li><strong>Bereich:</strong> ' + esc(mukiText) + '</li>' +
@@ -1251,5 +1281,6 @@ var form = document.getElementById('rechnungsformular');
 
 </body>
 </html>
+
 
 
