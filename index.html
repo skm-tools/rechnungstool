@@ -285,16 +285,41 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       <datalist id="dl-name"></datalist>
       <datalist id="dl-anschrift"></datalist>
       <div class="row">
-        <div class="field"><label>Steuernummer</label><input name="Steuernummer" required list="dl-steuernummer" autocomplete="on">
-<datalist id="dl-steuernummer"></datalist></div>
+        <div class="field">
+  <label>Steuernummer</label>
+  <input
+    name="Steuernummer"
+    id="tax_id"
+    type="text"
+    inputmode="numeric"
+    autocomplete="new-password"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
+    required
+    list="dl-steuernummer">
+  <datalist id="dl-steuernummer"></datalist>
+</div>
         <div class="field">
   <label>Rechnungsmonat</label>
   <input name="Monat" type="month" required>
 </div>
       </div>
       <div class="row">
-        <div class="field"><label>Rechnungsnummer</label><input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="off">
-<datalist id="dl-rechnungsnummer"></datalist></div>
+        <div class="field">
+  <label>Rechnungsnummer</label>
+  <input
+    name="Rechnungsnummer"
+    id="invoice_id"
+    type="text"
+    autocomplete="new-password"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
+    required
+    list="dl-rechnungsnummer">
+  <datalist id="dl-rechnungsnummer"></datalist>
+</div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
   </div>
