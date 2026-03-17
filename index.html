@@ -284,8 +284,22 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 </div>
       </div>
       <div class="row">
-        <div class="field"><label>Steuernummer</label><input name="Steuernummer" required list="dl-steuernummer" autocomplete="on">
-<datalist id="dl-steuernummer"></datalist></div>
+        <div class="field">
+  <label for="tax_id">Steuernummer</label>
+  <input
+    id="tax_id"
+    name="tax_id"
+    type="text"
+    required
+    list="dl-tax-id"
+    autocomplete="off"
+    inputmode="text"
+    autocapitalize="none"
+    autocorrect="off"
+    spellcheck="false"
+  >
+  <datalist id="dl-tax-id"></datalist>
+</div>
         <div class="field">
   <label>Rechnungsmonat</label>
   <input name="Monat" type="month" required>
@@ -1191,6 +1205,51 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const field = document.getElementById("tax_id");
+  const datalist = document.getElementById("dl-tax-id");
+  const storageKey = "rechnung_tax_id_history";
+  const maxItems = 5;
+
+  function loadValues() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey) || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveValues(values) {
+    localStorage.setItem(storageKey, JSON.stringify(values.slice(0, maxItems)));
+  }
+
+  function renderDatalist() {
+    const values = loadValues();
+    datalist.innerHTML = values
+      .map(v => `<option value="${String(v).replace(/"/g, "&quot;")}">`)
+      .join("");
+  }
+
+  function saveCurrentValue() {
+    const value = (field.value || "").trim();
+    if (!value) return;
+
+    let values = loadValues();
+
+    values = values.filter(v => v !== value);
+    values.unshift(value);
+
+    saveValues(values);
+    renderDatalist();
+  }
+
+  renderDatalist();
+
+  field.addEventListener("change", saveCurrentValue);
+  field.addEventListener("blur", saveCurrentValue);
+});
 </script>
 
 </body>
