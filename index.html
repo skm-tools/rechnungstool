@@ -36,6 +36,66 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     width: 100%; font-size: 1.08em; padding: 6px;
     border: 1px solid #ccd; border-radius: 5px; color: #111;
   }
+  .fake-input {
+    width: 100%;
+    min-height: 40px;
+    font-size: 1.08em;
+    line-height: 1.4;
+    padding: 6px;
+    border: 1px solid #ccd;
+    border-radius: 5px;
+    color: #111;
+    background: #fff;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .fake-input:empty::before {
+    content: attr(data-placeholder);
+    color: #888;
+  }
+  .fake-input:focus {
+    outline: 2px solid #2186d7;
+    outline-offset: 1px;
+  }
+  .fake-field-wrap {
+    position: relative;
+  }
+  .fake-suggestions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 4px);
+    z-index: 30;
+    background: #fff;
+    border: 1px solid #ccd;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .fake-suggestions.hidden {
+    display: none;
+  }
+  .fake-suggestion {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: none;
+    border-bottom: 1px solid #eef2f7;
+    padding: 10px 12px;
+    font-size: 0.98em;
+    cursor: pointer;
+  }
+  .fake-suggestion:last-child {
+    border-bottom: none;
+  }
+  .fake-suggestion:hover,
+  .fake-suggestion:focus {
+    background: #f3f8ff;
+    outline: none;
+  }
   .summary { background: #f7faff; border: 1px solid #dde; border-radius: 6px; padding: 12px 18px; margin-top: 8px; }
   .pdf-btn { margin-top: 18px; background: #2186d7; color: #fff; border: none; padding: 12px; font-size: 1.1em; border-radius: 6px; cursor: pointer; }
   .pdf-btn:hover { background: #1362a2; }
@@ -282,47 +342,51 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       </div>
       <input type="hidden" name="Name">
       <input type="hidden" name="Anschrift">
-      <input type="hidden" name="Bank" id="bank_hidden">
-      <input type="hidden" name="IBAN" id="iban_hidden">
-      <input type="hidden" name="BIC" id="bic_hidden">
-      <input type="hidden" name="TaxId" id="tax_id_hidden">
-      <input type="hidden" name="InvoiceId" id="invoice_id_hidden">
       <datalist id="dl-name"></datalist>
       <datalist id="dl-anschrift"></datalist>
       <div class="row">
         <div class="field">
-          <label>Steuernummer</label>
-          <input
-            id="tax_visible"
-            type="text"
-            inputmode="numeric"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            readonly
-            onfocus="this.removeAttribute('readonly');"
-            required>
-        </div>
+  <label for="tax_display">Steuernummer</label>
+  <div class="fake-field-wrap">
+    <div
+      id="tax_display"
+      class="fake-input"
+      contenteditable="true"
+      role="textbox"
+      aria-label="Steuernummer"
+      data-placeholder="Steuernummer"
+      data-required-label="Steuernummer"
+      data-target="tax_hidden"
+      data-storage-key="TaxId"
+      data-suggestions-id="tax_suggestions"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"></div>
+    <div id="tax_suggestions" class="fake-suggestions hidden"></div>
+  </div>
+  <input type="hidden" name="TaxId" id="tax_hidden">
+</div>
         <div class="field">
-          <label>Rechnungsmonat</label>
-          <input name="Monat" type="month" required>
-        </div>
+  <label>Rechnungsmonat</label>
+  <input name="Monat" type="month" required>
+</div>
       </div>
       <div class="row">
         <div class="field">
-          <label>Rechnungsnummer</label>
-          <input
-            id="invoice_visible"
-            type="text"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-            readonly
-            onfocus="this.removeAttribute('readonly');"
-            required>
-        </div>
+  <label for="invoice_display">Rechnungsnummer</label>
+  <div
+    id="invoice_display"
+    class="fake-input"
+    contenteditable="true"
+    role="textbox"
+    aria-label="Rechnungsnummer"
+    data-placeholder="Rechnungsnummer"
+    data-required-label="Rechnungsnummer"
+    spellcheck="false"
+    autocapitalize="off"
+    autocorrect="off"></div>
+  <input type="hidden" name="InvoiceId" id="invoice_hidden">
+</div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
   </div>
@@ -347,15 +411,33 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div>Enthaltene Umsatzsteuer (19 %): 0,00 €</div>
       </div>
       <div class="row">
-        <div class="field"><label>Bank</label><input id="bank_input" name="Bank" form="bankdatenform" list="dl-bank" autocomplete="organization">
-<datalist id="dl-bank"></datalist></div>
-        <div class="field"><label>IBAN</label><input id="iban_input" name="IBAN" form="bankdatenform" list="dl-iban" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="field">
+  <label for="bank_display">Bank</label>
+  <div class="fake-field-wrap">
+    <div
+      id="bank_display"
+      class="fake-input"
+      contenteditable="true"
+      role="textbox"
+      aria-label="Bank"
+      data-placeholder="Bank"
+      data-target="bank_hidden"
+      data-storage-key="Bank"
+      data-suggestions-id="bank_suggestions"
+      spellcheck="false"
+      autocapitalize="off"
+      autocorrect="off"></div>
+    <div id="bank_suggestions" class="fake-suggestions hidden"></div>
+  </div>
+  <input type="hidden" name="Bank" id="bank_hidden">
+</div>
+        <div class="field"><label>IBAN</label><input name="IBAN" list="dl-iban" autocomplete="off">
 <datalist id="dl-iban"></datalist></div>
        <div class="field">
-  <label for="bic_input">
+  <label for="bic">
     BIC <span style="color:#6b7280; font-weight:normal;">(optional)</span>
   </label>
-  <input id="bic_input" name="BIC" form="bankdatenform" list="dl-bic" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
+  <input id="bic" name="BIC" list="dl-bic" autocomplete="on" placeholder="(nur bei nicht-europäischem Bankkonto erforderlich)">
   <datalist id="dl-bic"></datalist>
 </div>
       </div>
@@ -450,7 +532,6 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     <button type="button" class="wizard-next" id="nextStep">Weiter</button>
   </div>
 </form>
-  <form id="bankdatenform" autocomplete="off" style="display:none"></form>
   </div>
   <script>
       // ==== Base64-PDFs einfügen ====
@@ -561,10 +642,11 @@ window.addEventListener('DOMContentLoaded', updateBerechnung);
     // ==== PDF GENERIERUNG ====
     
 document.getElementById('pdfgen').onclick = async function() {
+  if (window.syncSpecialFields) window.syncSpecialFields();
   const dateField = document.querySelector("input[name='Datum']");
-  const numberField = document.getElementById('invoice_visible');
+  const numberField = document.getElementById('invoice_display');
   const monthField = document.querySelector("input[name='Monat']");
-  const taxField = document.getElementById('tax_visible');
+  const taxField = document.getElementById('tax_display');
 
   if (!dateField.value) {
     alert("Bitte  Rechnungsdatum angeben!");
@@ -572,7 +654,7 @@ document.getElementById('pdfgen').onclick = async function() {
     return;
   }
 
-  if (!numberField.value) {
+  if (!(numberField && numberField.textContent.trim())) {
     alert("Bitte Rechnungsnummer angeben!");
     numberField.focus();
     return;
@@ -584,7 +666,7 @@ document.getElementById('pdfgen').onclick = async function() {
     return;
   }
 
-  if (!taxField.value) {
+  if (!(taxField && taxField.textContent.trim())) {
     alert("Bitte Steuernummer eintragen!");
     taxField.focus();
     return;
@@ -594,9 +676,10 @@ setPdfWaiting(true, 'Bitte warten');
 
   try {
       const form = document.getElementById('rechnungsformular');
-      if (typeof window.syncCombinedFieldsGlobal === 'function') {
-        try { window.syncCombinedFieldsGlobal(); } catch (e) { console.warn('syncCombinedFieldsGlobal Fehler vor PDF:', e); }
-      }
+      document.querySelectorAll('.fake-input[data-target]').forEach(function(el) {
+        const hidden = document.getElementById(el.dataset.target || '');
+        if (hidden) hidden.value = (el.textContent || '').trim();
+      });
       const formData = Object.fromEntries(new FormData(form));
       // Welche Variante?
       let base64_pdf = (formData.ust === "19") ? base64_ust : base64_klein;
@@ -971,11 +1054,10 @@ setTimeout(() => {
 <script>
 (function() {
   const FORM_ID = 'rechnungsformular';
-  const KEYS = ['Vorname','Nachname','Bank','IBAN','BIC','Monat'];
+  const KEYS = ['Name','Anschrift','IBAN','BIC','Monat'];
   const MAP = {
-    'Vorname': 'dl-vorname',
-    'Nachname': 'dl-nachname',
-    'Bank': 'dl-bank',
+    'Name': 'dl-name',
+    'Anschrift': 'dl-anschrift',
     'IBAN': 'dl-iban',
     'BIC': 'dl-bic',
     'Monat': 'dl-monat'
@@ -1002,13 +1084,83 @@ setTimeout(() => {
     Object.entries(MAP).forEach(([key, dlId]) => fillDatalist(dlId, loadList(key)));
 
     const form = document.getElementById(FORM_ID);
-    const valueForKey = (key) => {
-      if (key === 'Bank') return (document.getElementById('bank_input')?.value || '').trim();
-      if (key === 'IBAN') return (document.getElementById('iban_input')?.value || '').trim();
-      if (key === 'BIC') return (document.getElementById('bic_input')?.value || '').trim();
-      return (form.elements[key]?.value || '').trim();
+
+    function syncFakeFields() {
+      document.querySelectorAll('.fake-input[data-target]').forEach(el => {
+        const hidden = document.getElementById(el.dataset.target || '');
+        if (hidden) hidden.value = (el.textContent || '').trim();
+      });
+    }
+
+    function renderFakeSuggestions(el, filterValue) {
+      const suggestionBox = document.getElementById(el.dataset.suggestionsId || '');
+      if (!suggestionBox) return;
+      const storageKey = el.dataset.storageKey || '';
+      let items = loadList(storageKey);
+      const filter = (filterValue || '').trim().toLowerCase();
+      if (filter) items = items.filter(v => v.toLowerCase().includes(filter));
+      if (!items.length) {
+        suggestionBox.classList.add('hidden');
+        suggestionBox.innerHTML = '';
+        return;
+      }
+      suggestionBox.innerHTML = items.map(v => `<button type="button" class="fake-suggestion" data-value="${String(v).replace(/"/g, '&quot;')}">${String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</button>`).join('');
+      suggestionBox.classList.remove('hidden');
+    }
+
+    document.querySelectorAll('.fake-input[data-target]').forEach(el => {
+      const hidden = document.getElementById(el.dataset.target || '');
+      if (hidden && hidden.value) el.textContent = hidden.value;
+
+      el.addEventListener('input', () => {
+        if (hidden) hidden.value = (el.textContent || '').trim();
+        renderFakeSuggestions(el, el.textContent || '');
+      });
+
+      el.addEventListener('focus', () => {
+        if (hidden) hidden.value = (el.textContent || '').trim();
+        renderFakeSuggestions(el, el.textContent || '');
+      });
+
+      el.addEventListener('click', () => {
+        renderFakeSuggestions(el, el.textContent || '');
+      });
+
+      el.addEventListener('blur', () => {
+        if (hidden) hidden.value = (el.textContent || '').trim();
+        setTimeout(() => {
+          const suggestionBox = document.getElementById(el.dataset.suggestionsId || '');
+          if (suggestionBox) suggestionBox.classList.add('hidden');
+        }, 150);
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('.fake-suggestion');
+      if (btn) {
+        const box = btn.closest('.fake-suggestions');
+        const wrap = box ? box.closest('.fake-field-wrap') : null;
+        const fake = wrap ? wrap.querySelector('.fake-input[data-target]') : null;
+        if (fake) {
+          fake.textContent = btn.dataset.value || '';
+          const hidden = document.getElementById(fake.dataset.target || '');
+          if (hidden) hidden.value = (fake.textContent || '').trim();
+          box.classList.add('hidden');
+          fake.focus();
+        }
+        return;
+      }
+      if (!event.target.closest('.fake-field-wrap')) {
+        document.querySelectorAll('.fake-suggestions').forEach(box => box.classList.add('hidden'));
+      }
+    });
+
+    const saveAll = () => {
+      syncFakeFields();
+      Object.keys(MAP).forEach(k => saveValue(k, (form.elements[k]?.value || '').trim()));
+      saveValue('Bank', (form.elements['Bank']?.value || '').trim());
+      saveValue('TaxId', (form.elements['TaxId']?.value || '').trim());
     };
-    const saveAll = () => Object.keys(MAP).forEach(k => saveValue(k, valueForKey(k)));
 
     // echter Submit ;-)
     form && form.addEventListener('submit', saveAll);
@@ -1047,12 +1199,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (form.elements['Name']) form.elements['Name'].value = fullName;
     if (form.elements['Anschrift']) form.elements['Anschrift'].value = fullAddress;
-    if (form.elements['Bank']) form.elements['Bank'].value = document.getElementById('bank_input')?.value || '';
-    if (form.elements['IBAN']) form.elements['IBAN'].value = document.getElementById('iban_input')?.value || '';
-    if (form.elements['BIC']) form.elements['BIC'].value = document.getElementById('bic_input')?.value || '';
-    if (form.elements['TaxId']) form.elements['TaxId'].value = document.getElementById('tax_visible')?.value || '';
-    if (form.elements['InvoiceId']) form.elements['InvoiceId'].value = document.getElementById('invoice_visible')?.value || '';
   }
+
+  function syncSpecialFields() {
+    const taxVisible = document.getElementById('tax_display');
+    const invoiceVisible = document.getElementById('invoice_display');
+    const taxHidden = document.getElementById('tax_hidden');
+    const invoiceHidden = document.getElementById('invoice_hidden');
+
+    if (taxHidden) taxHidden.value = (taxVisible?.textContent || '').trim();
+    if (invoiceHidden) invoiceHidden.value = (invoiceVisible?.textContent || '').trim();
+  }
+
+  window.syncSpecialFields = syncSpecialFields;
 
   fields.forEach(function(name) {
     const el = form.elements[name];
@@ -1061,26 +1220,29 @@ document.addEventListener('DOMContentLoaded', function () {
     el.addEventListener('change', syncCombinedFields);
   });
 
-  ['bank_input','iban_input','bic_input','tax_visible','invoice_visible'].forEach(function(id) {
+  ['tax_display','invoice_display'].forEach(function(id) {
     const el = document.getElementById(id);
     if (!el) return;
-    el.addEventListener('input', syncCombinedFields);
-    el.addEventListener('change', syncCombinedFields);
+    el.addEventListener('input', syncSpecialFields);
+    el.addEventListener('blur', syncSpecialFields);
   });
 
   const nextBtn = document.querySelector('.wizard-next');
   if (nextBtn) {
     nextBtn.addEventListener('click', syncCombinedFields, { capture: true });
+    nextBtn.addEventListener('click', syncSpecialFields, { capture: true });
   }
 
   const pdfBtn = document.getElementById('pdfgen');
   if (pdfBtn) {
     pdfBtn.addEventListener('click', syncCombinedFields, { capture: true });
+    pdfBtn.addEventListener('click', syncSpecialFields, { capture: true });
   }
 
   form.addEventListener('submit', syncCombinedFields, { capture: true });
-  window.syncCombinedFieldsGlobal = syncCombinedFields;
+  form.addEventListener('submit', syncSpecialFields, { capture: true });
   syncCombinedFields();
+  syncSpecialFields();
 });
 </script>
 
@@ -1096,9 +1258,10 @@ document.addEventListener('DOMContentLoaded', function () {
     try { updateBerechnung(); } catch (e) { console.warn('updateBerechnung Fehler in buildPreview:', e); }
   }
 
-  if (typeof window.syncCombinedFieldsGlobal === 'function') {
-    try { window.syncCombinedFieldsGlobal(); } catch (e) { console.warn('syncCombinedFieldsGlobal Fehler in buildPreview:', e); }
-  }
+  document.querySelectorAll('.fake-input[data-target]').forEach(function(el) {
+    var hidden = document.getElementById(el.getAttribute('data-target') || '');
+    if (hidden) hidden.value = (el.textContent || '').trim();
+  });
 
   var fd = new FormData(form);
   var data = {};
@@ -1246,6 +1409,19 @@ var form = document.getElementById('rechnungsformular');
         return false;
       }
     }
+
+    var pseudoRequired = Array.prototype.slice.call(step.querySelectorAll('.fake-input[data-required-label]'));
+    for (var j = 0; j < pseudoRequired.length; j++) {
+      var pseudo = pseudoRequired[j];
+      if (!pseudo.textContent.trim()) {
+        alert('Bitte dieses Feld ausfüllen: ' + pseudo.getAttribute('data-required-label'));
+        try { pseudo.focus(); } catch(e) {}
+        if (pseudo.scrollIntoView) {
+          pseudo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return false;
+      }
+    }
     return true;
   }
 
@@ -1281,8 +1457,6 @@ var form = document.getElementById('rechnungsformular');
 
 </body>
 </html>
-
-
 
 
 
