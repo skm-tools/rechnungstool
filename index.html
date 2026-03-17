@@ -64,12 +64,11 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   .summary { position: relative; top: 0; }
   .sign-row { flex-wrap: wrap; align-items: stretch; }
 @media (max-width: 740px) {
-  .row { 
-    flex-direction: column; 
-    gap: 10px; 
+  .row {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  /* Diese 3 Zeilen sollen mobil nebeneinander bleiben */
   .row.row-name,
   .row.row-address-top,
   .row.row-address-bottom {
@@ -78,11 +77,10 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     gap: 10px;
   }
 
-  .row .field { 
-    min-width: 100%; 
+  .row .field {
+    min-width: 100%;
   }
 
-  /* In den 3 Sonderzeilen sollen die Felder nebeneinander funktionieren */
   .row.row-name .field,
   .row.row-address-top .field,
   .row.row-address-bottom .field {
@@ -90,7 +88,6 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     flex: 1 1 0;
   }
 
-  /* Straße breiter, Hausnummer schmaler */
   .row.row-address-top .field-street {
     flex: 3 1 0;
   }
@@ -99,7 +96,6 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     flex: 1 1 0;
   }
 
-  /* PLZ schmaler, Ort breiter */
   .row.row-address-bottom .field-postcode {
     flex: 1 1 0;
   }
@@ -108,8 +104,8 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     flex: 2 1 0;
   }
 
-  h2 { 
-    font-size: 1.25rem; 
+  h2 {
+    font-size: 1.25rem;
   }
 }
 
@@ -298,60 +294,65 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
   </div>
 
   <div class="form-step" data-step="2">
-<div class="row row-name">
-        <div class="field"><label>Vorname</label><input name="Vorname" required list="dl-vorname" autocomplete="given-name">
-<datalist id="dl-vorname"></datalist></div>
-        <div class="field"><label>Nachname</label><input name="Nachname" required list="dl-nachname" autocomplete="family-name">
-<datalist id="dl-nachname"></datalist></div>
-      </div>
-      <div class="row row-address-top">
-        <div class="field street">
-  <label>Straße</label>
-  <input name="Strasse" required autocomplete="address-line1">
-</div>
-        <div class="field house-number">
-  <label>Hausnummer</label>
-  <input name="Hausnummer" required autocomplete="address-line2">
-</div>
-      </div>
-      <div class="row row-address-bottom">
-        <div class="field postal-code">
-  <label>PLZ</label>
-  <input name="PLZ" required inputmode="numeric" autocomplete="postal-code">
-</div>
-        <div class="field city">
-  <label>Ort</label>
-  <input name="Ort" required autocomplete="address-level2">
-</div>
-      </div>
-      <div class="row">
-        <div class="field">
-  <label for="tax_id">Steuernummer</label>
-  <input
-    id="tax_id"
-    name="tax_id"
-    type="text"
-    required
-    list="dl-tax-id"
-    autocomplete="off"
-    inputmode="text"
-    autocapitalize="none"
-    autocorrect="off"
-    spellcheck="false"
-  >
-  <datalist id="dl-tax-id"></datalist>
-</div>
-        <div class="field">
-  <label>Rechnungsmonat</label>
-  <input name="Monat" type="month" required>
-</div>
-      </div>
-      <div class="row">
-        <div class="field"><label>Rechnungsnummer</label><input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="on">
-<datalist id="dl-rechnungsnummer"></datalist></div>
-        <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
-      </div>
+
+  <div class="row row-name">
+    <div class="field">
+      <label>Vorname</label>
+      <input name="Vorname" required autocomplete="given-name">
+    </div>
+    <div class="field">
+      <label>Nachname</label>
+      <input name="Nachname" required autocomplete="family-name">
+    </div>
   </div>
+
+  <div class="row row-address-top">
+    <div class="field field-street">
+      <label>Straße</label>
+      <input name="Strasse" required autocomplete="address-line1">
+    </div>
+    <div class="field field-house-no">
+      <label>Hausnummer</label>
+      <input name="Hausnummer" required autocomplete="off">
+    </div>
+  </div>
+
+  <div class="row row-address-bottom">
+    <div class="field field-postcode">
+      <label>PLZ</label>
+      <input name="PLZ" required inputmode="numeric" autocomplete="postal-code">
+    </div>
+    <div class="field field-city">
+      <label>Ort</label>
+      <input name="Ort" required autocomplete="address-level2">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>Steuernummer</label>
+      <input name="Steuernummer" required list="dl-steuernummer" autocomplete="off">
+      <datalist id="dl-steuernummer"></datalist>
+    </div>
+    <div class="field">
+      <label>Rechnungsmonat</label>
+      <input name="Monat" type="month" required>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <label>Rechnungsnummer</label>
+      <input name="Rechnungsnummer" required list="dl-rechnungsnummer" autocomplete="off">
+      <datalist id="dl-rechnungsnummer"></datalist>
+    </div>
+    <div class="field">
+      <label>Rechnungsdatum</label>
+      <input name="Datum" type="date" required>
+    </div>
+  </div>
+
+</div>
 
   <div class="form-step" data-step="3">
 
