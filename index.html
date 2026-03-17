@@ -288,7 +288,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div class="field">
   <label>Steuernummer</label>
   <input
-    name="Steuernummer"
+    name="TaxId"
     id="tax_id"
     type="text"
     inputmode="numeric"
@@ -309,7 +309,7 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
         <div class="field">
   <label>Rechnungsnummer</label>
   <input
-    name="Rechnungsnummer"
+    name="InvoiceId"
     id="invoice_id"
     type="text"
     autocomplete="new-password"
@@ -628,8 +628,8 @@ if (formData.ust === "19") {
   page.drawText(formData.Name || "", { x: 115, y: 760, size: 13 });
   page.drawText(formData.Anschrift || "", { x: 130, y: 732, size: 13 });
   page.drawText(formatDateDE(formData.Datum) || "", { x: 370, y: 541, size: 13 });
-  page.drawText(formData.Steuernummer || "", { x: 160, y: 705, size: 13 });
-  page.drawText(formData.Rechnungsnummer || "", { x: 184, y: 511, size: 13 });
+  page.drawText(formData.TaxId || "", { x: 160, y: 705, size: 13 });
+  page.drawText(formData.InvoiceId || "", { x: 184, y: 511, size: 13 });
   page.drawText(prettyMonat || "", { x: 160, y: 442, size: 13 });
 
   page.drawText(formData.Honorarstunden || "", { x: 275, y: 403, size: 13 });
@@ -673,8 +673,8 @@ function ohneEuro(zahl) {
   page.drawText(formData.Name || "", { x: 115, y: 760, size: 13 });
   page.drawText(formData.Anschrift || "", { x: 130, y: 732, size: 13 });
   page.drawText(formatDateDE(formData.Datum) || "", { x: 370, y: 527, size: 13 });
-  page.drawText(formData.Steuernummer || "", { x: 160, y: 705, size: 13 });
-  page.drawText(formData.Rechnungsnummer || "", { x: 184, y: 498, size: 13 });
+  page.drawText(formData.TaxId || "", { x: 160, y: 705, size: 13 });
+  page.drawText(formData.InvoiceId || "", { x: 184, y: 498, size: 13 });
   page.drawText(prettyMonat || "", { x: 160, y: 429, size: 13 });
 
    page.drawText(formData.Honorarstunden || "", { x: 275, y: 391, size: 13 });
