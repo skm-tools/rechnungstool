@@ -262,8 +262,11 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
 </div>
       </div>
       <div class="row">
-        <div class="field"><label>Steuernummer</label><input name="Steuernummer" required list="dl-steuernummer" autocomplete="on">
-<datalist id="dl-steuernummer"></datalist></div>
+        <div class="field">
+  <label>Steuernummer</label>
+  <input id="steuernummer" name="taxnumber" required list="dl-steuernummer" autocomplete="off">
+  <datalist id="dl-steuernummer"></datalist>
+</div>
         <div class="field">
   <label>Rechnungsmonat</label>
   <input name="Monat" type="month" required>
@@ -1160,6 +1163,43 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const field = document.getElementById("steuernummer");
+  const datalist = document.getElementById("dl-steuernummer");
+  const storageKey = "rechnung_steuernummern";
 
+  function loadSuggestions() {
+    const values = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    datalist.innerHTML = "";
+    values.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      datalist.appendChild(option);
+    });
+  }
+
+  function saveSuggestion(value) {
+    value = (value || "").trim();
+    if (!value) return;
+
+    let values = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    values = values.filter(v => v !== value);
+    values.unshift(value);
+
+    values = values.slice(0, 5); // nur die letzten 5 merken
+
+    localStorage.setItem(storageKey, JSON.stringify(values));
+  }
+
+  loadSuggestions();
+
+  field.addEventListener("change", function () {
+    saveSuggestion(field.value);
+    loadSuggestions();
+  });
+});
+</script>
 </body>
 </html>
