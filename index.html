@@ -692,8 +692,8 @@ async function sharePdfFile(pdfBytes, fileName) {
     const file = new File([pdfBytes], fileName, { type: 'application/pdf' });
     if (navigator.canShare && navigator.share) {
       const shareData = {
-        title: 'Rechnung',
-        text: 'Anbei meine Rechnung.',
+        title: 'SKM-Rechnung ' + fileName.replace(/\.pdf$/i, ''),
+        text: 'Guten Tag,\n\nanbei schicke ich meine Rechnung für die Sprach- und Kulturmittlung bei MeG und bitte um Bearbeitung.\n\nMit freundlichen Grüßen',
         files: [file]
       };
       if (navigator.canShare(shareData)) {
