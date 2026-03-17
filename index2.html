@@ -296,9 +296,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     autocorrect="off"
     autocapitalize="off"
     spellcheck="false"
-    required
-    list="dl-steuernummer">
-  <datalist id="dl-steuernummer"></datalist>
+    readonly
+    onfocus="this.removeAttribute('readonly');"
+    required>
 </div>
         <div class="field">
   <label>Rechnungsmonat</label>
@@ -316,9 +316,9 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
     autocorrect="off"
     autocapitalize="off"
     spellcheck="false"
-    required
-    list="dl-rechnungsnummer">
-  <datalist id="dl-rechnungsnummer"></datalist>
+    readonly
+    onfocus="this.removeAttribute('readonly');"
+    required>
 </div>
         <div class="field"><label>Rechnungsdatum</label><input name="Datum" type="date" required></div>
       </div>
@@ -558,9 +558,9 @@ window.addEventListener('DOMContentLoaded', updateBerechnung);
     
 document.getElementById('pdfgen').onclick = async function() {
   const dateField = document.querySelector("input[name='Datum']");
-  const numberField = document.querySelector("input[name='Rechnungsnummer']");
+  const numberField = document.querySelector("input[name='InvoiceId']");
   const monthField = document.querySelector("input[name='Monat']");
-  const taxField = document.querySelector("input[name='Steuernummer']");
+  const taxField = document.querySelector("input[name='TaxId']");
 
   if (!dateField.value) {
     alert("Bitte  Rechnungsdatum angeben!");
@@ -964,15 +964,13 @@ setTimeout(() => {
 <script>
 (function() {
   const FORM_ID = 'rechnungsformular';
-  const KEYS = ['Name','Anschrift','Bank','IBAN','BIC','Steuernummer','Rechnungsnummer','Monat'];
+  const KEYS = ['Name','Anschrift','Bank','IBAN','BIC','Monat'];
   const MAP = {
     'Name': 'dl-name',
     'Anschrift': 'dl-anschrift',
     'Bank': 'dl-bank',
     'IBAN': 'dl-iban',
     'BIC': 'dl-bic',
-    'Steuernummer': 'dl-steuernummer',
-    'Rechnungsnummer': 'dl-rechnungsnummer',
     'Monat': 'dl-monat'
   };
   const MAX = 10;
@@ -1133,8 +1131,8 @@ if (/^\d{4}-\d{2}-\d{2}$/.test(datumText)) {
       '<ul style="list-style:none;padding-left:0;margin:0 0 8px 0;font-size:0.95rem;">' +
         '<li><strong>Name:</strong> ' + esc(data.Name) + '</li>' +
         '<li><strong>Anschrift:</strong> ' + esc(data.Anschrift) + '</li>' +
-        '<li><strong>Steuernummer:</strong> ' + esc(data.Steuernummer) + '</li>' +
-        '<li><strong>Rechnungsnummer:</strong> ' + esc(data.Rechnungsnummer) + '</li>' +
+        '<li><strong>Steuernummer:</strong> ' + esc(data.TaxId) + '</li>' +
+        '<li><strong>Rechnungsnummer:</strong> ' + esc(data.InvoiceId) + '</li>' +
         '<li><strong>Rechnungsmonat:</strong> ' + esc(monatText) + '</li>' +
         '<li><strong>Rechnungsdatum:</strong> ' + esc(datumText) + '</li>' +
         '<li><strong>Bereich:</strong> ' + esc(mukiText) + '</li>' +
@@ -1253,4 +1251,5 @@ var form = document.getElementById('rechnungsformular');
 
 </body>
 </html>
+
 
