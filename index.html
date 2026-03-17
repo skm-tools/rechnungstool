@@ -349,23 +349,19 @@ var e=function(t,n){return(e=Object.setPrototypeOf||{__proto__:[]}instanceof Arr
       <div class="row row-tax-invoice">
         <div class="field">
   <label for="tax_display">Steuernummer</label>
-  <div class="fake-field-wrap">
-    <div
-      id="tax_display"
-      class="fake-input"
-      contenteditable="true"
-      role="textbox"
-      aria-label="Steuernummer"
-      data-placeholder="Steuernummer"
-      data-required-label="Steuernummer"
-      data-target="tax_hidden"
-      data-storage-key="TaxId"
-      data-suggestions-id="tax_suggestions"
-      spellcheck="false"
-      autocapitalize="off"
-      autocorrect="off"></div>
-    <div id="tax_suggestions" class="fake-suggestions hidden"></div>
-  </div>
+  <div
+    id="tax_display"
+    class="fake-input"
+    contenteditable="true"
+    role="textbox"
+    aria-label="Steuernummer"
+    data-placeholder="Steuernummer"
+    data-required-label="Steuernummer"
+    spellcheck="false"
+    autocapitalize="off"
+    autocorrect="off"></div>
+  <input type="hidden" name="TaxId" id="tax_hidden">
+</div>
   <input type="hidden" name="TaxId" id="tax_hidden">
 </div>
         <div class="field">
